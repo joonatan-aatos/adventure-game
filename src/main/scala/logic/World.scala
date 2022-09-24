@@ -3,10 +3,11 @@ package logic
 import scala.collection.mutable.ArrayBuffer
 
 class World {
-  private val sprites: ArrayBuffer[Sprite] = ArrayBuffer[Sprite]()
+  val sprites: ArrayBuffer[Sprite] = ArrayBuffer[Sprite]()
   private val spritesToBeRemoved = ArrayBuffer[Sprite]()
 
-  sprites.append(new Player(4, 4))
+  val player = new Player(4, 4)
+  sprites.append(player)
 
   def tick(): Unit = {
     for (sprite <- sprites) {
@@ -17,6 +18,4 @@ class World {
     }
     spritesToBeRemoved.clear()
   }
-
-  def getSprites: Vector[Sprite] = sprites.clone().toVector
 }

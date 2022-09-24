@@ -1,18 +1,18 @@
 package engine;
 
 object Engine {
-  val VSYNC: Int = -1
+  val UNLIMITED: Int = -1
 }
 
 // This class manages the main thread that the game is running on
 class Engine(val gameInterface: GameInterface) extends Runnable, EngineInterface {
 
-    var running = false
-    var printFps = false
-    var desiredTPS = -1
-    var desiredFPS = -1
-    var currentTPS: Int = 0
-    var currentFPS: Int = 0
+    private var running = false
+    private var printFps = false
+    private var desiredTPS = -1
+    private var desiredFPS = -1
+    private var currentTPS: Int = 0
+    private var currentFPS: Int = 0
 
     // Called when a new thread is created. This should not be called manually
     override def run(): Unit = {
@@ -45,7 +45,7 @@ class Engine(val gameInterface: GameInterface) extends Runnable, EngineInterface
                 unprocessedTicks -= 1
             }
 
-            if(desiredFPS == Engine.VSYNC || unprocessedFrames >= 1) {
+            if(desiredFPS == Engine.UNLIMITED || unprocessedFrames >= 1) {
                 gameInterface.render()
                 fps += 1
                 unprocessedFrames -= Math.floor(unprocessedFrames)

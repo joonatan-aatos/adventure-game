@@ -11,7 +11,9 @@ class Game extends GameInterface {
 
   override def init(engine: EngineInterface): Unit = {
     this.engineInterface = Option(engine)
+    visualizer.addEventListener(world.player)
     visualizer.frame.setVisible(true)
+    visualizer.canvas.requestFocus()
   }
 
   override def render(): Unit = {

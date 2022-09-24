@@ -2,13 +2,15 @@ package visualizer
 
 import logic.World
 
+import java.awt.event.{KeyListener, MouseListener}
+import java.awt.image.ImageObserver
 import java.awt.{Canvas, Color, Graphics, Graphics2D, RenderingHints}
+import java.util.EventListener
 import javax.swing.{JFrame, WindowConstants}
 
 class Visualizer {
   val WINDOW_WIDTH = 800
   val WINDOW_HEIGHT = 800
-  val TILE_SIZE = 30
 
   val frame = new JFrame()
   frame.setTitle("Rikki")
@@ -18,7 +20,15 @@ class Visualizer {
   frame.setLocationRelativeTo(null)
 
   val canvas = new Canvas()
+  val renderer = new Renderer(canvas.asInstanceOf[ImageObserver])
   frame.add(canvas)
+
+  def addEventListener(eventListener: EventListener): Unit = {
+    eventListener match {
+      case e: KeyListener => canvas.addKeyListener(e)
+      case e: MouseListener => canvas.addMouseListener(e)
+    }
+  }
 
   def render(world: World): Unit = {
     val canvasGraphics = canvas.getGraphics
@@ -29,20 +39,8 @@ class Visualizer {
     //graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     //graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
-    drawSprites(graphics, world)
+    renderer.drawSprites(graphics, world)
 
     canvasGraphics.drawImage(canvasImage, 0, 0, canvas)
-  }
-
-  private def drawSprites(g: Graphics2D, world: World): Unit = {
-    g.setColor(Color.RED)
-    for (sprite <- world.getSprites) {
-      g.fillRect(
-        Math.round((sprite.xPos - 0.5f) * TILE_SIZE),
-        Math.round((sprite.yPos - 0.5f) * TILE_SIZE),
-        TILE_SIZE,
-        TILE_SIZE
-      )
-    }
   }
 }
