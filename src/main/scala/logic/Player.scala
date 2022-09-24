@@ -9,7 +9,15 @@ class Player(val x: Float, val y: Float) extends Sprite(x, y), KeyListener {
   var input: (Float, Float) = (0f, 0f)
   var facingDirection: Directions.Value = Directions.Down
 
+  // The player is attacking if attackingTimer != 0
+  @volatile var attackingTimer: Int = 0
+  private val attackLength = 21
+
   override def tick(): Unit = {
+    if attackingTimer != 0 then {
+      attackingTimer -= 1
+      return
+    }
     input = captureNormalizedInput()
     if input._1 != 0 then
       facingDirection = if input._1 > 0 then Directions.Right else Directions.Left
@@ -32,10 +40,25 @@ class Player(val x: Float, val y: Float) extends Sprite(x, y), KeyListener {
     (dx / vectorLength, dy / vectorLength)
   }
 
+  private def startAttack(direction: Directions.Value): Unit = {
+    if attackingTimer != 0 then return
+    attackingTimer = attackLength
+    facingDirection = direction
+  }
+
   override def keyPressed(keyEvent: KeyEvent): Unit = {
     val code = keyEvent.getKeyCode
     if !keysPressed.contains(code) then
       keysPressed.append(code)
+
+    code match {
+      case KeyEvent.VK_SPACE => startAttack(facingDirection)
+      case KeyEvent.VK_UP => startAttack(Directions.Up)
+      case KeyEvent.VK_DOWN => startAttack(Directions.Down)
+      case KeyEvent.VK_LEFT => startAttack(Directions.Left)
+      case KeyEvent.VK_RIGHT => startAttack(Directions.Right)
+      case _ =>
+    }
   }
 
   override def keyReleased(keyEvent: KeyEvent): Unit = {

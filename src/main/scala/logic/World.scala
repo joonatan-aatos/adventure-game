@@ -12,6 +12,7 @@ class World {
   def tick(): Unit = {
     for (sprite <- sprites) {
       sprite.tick()
+      if sprite.shouldBeDeleted then spritesToBeRemoved.append(sprite)
     }
     for (sprite <- spritesToBeRemoved) {
       sprites -= sprite
