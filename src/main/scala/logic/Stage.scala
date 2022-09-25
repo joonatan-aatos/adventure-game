@@ -22,4 +22,6 @@ class Stage {
   private val layerInstancesJSON = worldJSON("levels")(0)("layerInstances")
   private val tilesJSON = layerInstancesJSON(0)("gridTiles").as[Seq[JsValue]]
   val tiles: Vector[Tile] = tilesJSON.map((tile: JsValue) => parseTile(tile)).toVector
+  val worldWidth = 20
+  val worldHeight = 20
 }

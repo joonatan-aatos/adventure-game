@@ -11,6 +11,7 @@ import javax.swing.{JFrame, WindowConstants}
 class Visualizer {
   val WINDOW_WIDTH = 800
   val WINDOW_HEIGHT = 800
+  val TILE_SIZE = 48
 
   val frame = new JFrame()
   frame.setTitle("Rikki")
@@ -20,8 +21,10 @@ class Visualizer {
   frame.setLocationRelativeTo(null)
 
   val canvas = new Canvas()
-  val renderer = new Renderer(canvas.asInstanceOf[ImageObserver])
+  val camera = new Camera(0f, 0f, WINDOW_WIDTH.toFloat, WINDOW_HEIGHT.toFloat, TILE_SIZE.toFloat)
+  val renderer = new Renderer(canvas.asInstanceOf[ImageObserver], camera, TILE_SIZE)
   frame.add(canvas)
+
 
   def addEventListener(eventListener: EventListener): Unit = {
     eventListener match {
@@ -39,6 +42,7 @@ class Visualizer {
     //graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     //graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
+    camera.updatePosition(world.player.xPos, world.player.yPos, world.stage.worldWidth, world.stage.worldHeight)
     renderer.drawStage(graphics, world)
     renderer.drawSprites(graphics, world)
 

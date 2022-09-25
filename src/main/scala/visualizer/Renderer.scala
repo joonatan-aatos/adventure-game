@@ -6,15 +6,18 @@ import visualizer.ResourceHelper.{playerIdleMap, playerRunningMap, playerAttacki
 import java.awt.image.ImageObserver
 import java.awt.{Color, Graphics2D}
 
-class Renderer(val imageObserver: ImageObserver) {
-  val TILE_SIZE = 48
-  val SCALING_FACTOR = 3f
+class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) {
+  private val scalingFactor = tileSize.toFloat / 16f
 
   private var playerAnimation: Animation = ResourceHelper.PLAYER_IDLE_DOWN
+
+  def calculateDisplayCoords(worldXPos: Float, worldYPos: Float): (Float, Float) =
+    (worldXPos * tileSize - camera.xPos, worldYPos * tileSize - camera.yPos)
 
   def drawSprites(g: Graphics2D, world: World): Unit = {
     g.setColor(Color.RED)
     for (sprite <- world.sprites) {
+      val coords = calculateDisplayCoords(sprite.xPos, sprite.yPos)
       sprite match {
         case player: Player =>
           val animationMap = {
@@ -29,10 +32,10 @@ class Renderer(val imageObserver: ImageObserver) {
           val image = playerAnimation.getFrame
           g.drawImage(
             image,
-            Math.round(sprite.xPos * TILE_SIZE - image.getWidth * SCALING_FACTOR / 2),
-            Math.round(sprite.yPos * TILE_SIZE - image.getHeight * SCALING_FACTOR / 2),
-            Math.round(image.getWidth * SCALING_FACTOR),
-            Math.round(image.getHeight * SCALING_FACTOR),
+            Math.round(coords._1 - image.getWidth * scalingFactor / 2),
+            Math.round(coords._2 - image.getHeight * scalingFactor / 2),
+            Math.round(image.getWidth * scalingFactor),
+            Math.round(image.getHeight * scalingFactor),
             imageObserver
           )
         case _ =>
@@ -43,19 +46,16 @@ class Renderer(val imageObserver: ImageObserver) {
   def drawStage(g: Graphics2D, world: World): Unit = {
     val tiles = world.stage.tiles
     for (tile <- tiles) {
-      try {
-        val tileImg = ResourceHelper.overworldTiles(tile.src._1)(tile.src._2)
-        g.drawImage(
-          tileImg,
-          tile.pos._1 * TILE_SIZE,
-          tile.pos._2 * TILE_SIZE,
-          TILE_SIZE,
-          TILE_SIZE,
-          imageObserver
-        )
-      } catch {
-        case e: Exception =>
-      }
+      val tileImg = ResourceHelper.overworldTiles(tile.src._1)(tile.src._2)
+      val coords = calculateDisplayCoords(tile.pos._1, tile.pos._2)
+      g.drawImage(
+        tileImg,
+        math.round(coords._1),
+        math.round(coords._2),
+        tileSize,
+        tileSize,
+        imageObserver
+      )
     }
   }
 }
