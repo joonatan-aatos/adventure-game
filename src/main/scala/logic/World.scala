@@ -7,12 +7,12 @@ class World {
   val sprites: ArrayBuffer[Sprite] = ArrayBuffer[Sprite]()
   private val spritesToBeRemoved = ArrayBuffer[Sprite]()
 
-  val player = new Player(4, 4)
+  val player = new Player(5, 5)
   sprites.append(player)
 
   def tick(): Unit = {
     for (sprite <- sprites) {
-      sprite.tick()
+      sprite.tick(this)
       if sprite.shouldBeDeleted then spritesToBeRemoved.append(sprite)
     }
     for (sprite <- spritesToBeRemoved) {

@@ -1,8 +1,8 @@
 package visualizer
 
-class Camera(var xPos: Float, var yPos: Float, windowWidth: Float, windowHeight: Float, tileSize: Float) {
-  private val cameraVelocity = 0.05f
-  private val moveThreshold = tileSize * 0.7f
+class Camera(var xPos: Float, var yPos: Float, val windowWidth: Float, val windowHeight: Float, tileSize: Float) {
+  private val cameraVelocity = 0.06f
+  private val moveThreshold = tileSize * 0.5f
 
   def updatePosition(targetXPos: Float, targetYPos: Float, stageWidth: Int, stageHeight: Int): Unit = {
     val targetCameraPosition = (
