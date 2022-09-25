@@ -8,7 +8,32 @@ import scala.collection.mutable.ArrayBuffer
 
 object ResourceHelper {
   val SPRITE_SIZE = 16
+  val TILE_SIZE = 16
   val PLAYER_SPRITESHEET: BufferedImage = ImageIO.read(getClass.getResourceAsStream("/img/Char_Sprites/char_spritesheet.png"))
+  val OVERWORLD_TILESET: BufferedImage = ImageIO.read(getClass.getResourceAsStream("/img/Overworld_Tileset.png"))
+
+  /****** OVERWORLD TILESET ******/
+
+  def readTileSet(tileSet: BufferedImage, columns: Int, rows: Int): Vector[Vector[BufferedImage]] = {
+    val tiles = ArrayBuffer[Vector[BufferedImage]]()
+    for (x <- 0 until columns) {
+      val column = ArrayBuffer[BufferedImage]()
+      for (y <- 0 until rows) {
+        column.append(tileSet.getSubimage(
+          x*TILE_SIZE,
+          y*TILE_SIZE,
+          TILE_SIZE,
+          TILE_SIZE
+        ))
+      }
+      tiles.append(column.toVector)
+    }
+    tiles.toVector
+  }
+
+  val overworldTiles: Vector[Vector[BufferedImage]] = readTileSet(OVERWORLD_TILESET, 17, 13)
+
+  /****** SPRITE SHEET ******/
 
   private def readSpriteSheat(sheet: BufferedImage, xPos: Int, yPos: Int, count: Int, spriteSize: Int): Vector[BufferedImage] = {
     val images = ArrayBuffer[BufferedImage]()

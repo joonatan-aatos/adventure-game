@@ -39,6 +39,7 @@ class Visualizer {
     //graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     //graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
+    renderer.drawStage(graphics, world)
     renderer.drawSprites(graphics, world)
 
     canvasGraphics.drawImage(canvasImage, 0, 0, canvas)

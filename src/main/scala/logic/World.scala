@@ -3,6 +3,7 @@ package logic
 import scala.collection.mutable.ArrayBuffer
 
 class World {
+  val stage: Stage = new Stage()
   val sprites: ArrayBuffer[Sprite] = ArrayBuffer[Sprite]()
   private val spritesToBeRemoved = ArrayBuffer[Sprite]()
 

@@ -39,4 +39,23 @@ class Renderer(val imageObserver: ImageObserver) {
       }
     }
   }
+
+  def drawStage(g: Graphics2D, world: World): Unit = {
+    val tiles = world.stage.tiles
+    for (tile <- tiles) {
+      try {
+        val tileImg = ResourceHelper.overworldTiles(tile.src._1)(tile.src._2)
+        g.drawImage(
+          tileImg,
+          tile.pos._1 * TILE_SIZE,
+          tile.pos._2 * TILE_SIZE,
+          TILE_SIZE,
+          TILE_SIZE,
+          imageObserver
+        )
+      } catch {
+        case e: Exception =>
+      }
+    }
+  }
 }

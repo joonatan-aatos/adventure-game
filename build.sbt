@@ -6,3 +6,6 @@ lazy val root = (project in file("."))
   .settings(
     name := "rikki"
   )
+
+// https://mvnrepository.com/artifact/com.typesafe.play/play-json
+libraryDependencies += "com.typesafe.play" %% "play-json" % "2.10.0-RC6"
