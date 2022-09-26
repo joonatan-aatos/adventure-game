@@ -113,4 +113,12 @@ object ResourceHelper {
     Direction.Left -> BAT_RUNNING_LEFT,
     Direction.Right -> BAT_RUNNING_RIGHT
   )
+
+  /****** HUD ******/
+
+  val HEARTS_IMAGE: BufferedImage = ImageIO.read(getClass.getResourceAsStream("/img/Hud_Ui/hearts.png"))
+
+  val heartImages: Vector[BufferedImage] = readSpriteSheat(HEARTS_IMAGE, 0, 0, 2, SPRITE_SIZE)
+  val FULL_HEART: BufferedImage = heartImages(0)
+  val DEPLETED_HEART: BufferedImage = heartImages(1)
 }

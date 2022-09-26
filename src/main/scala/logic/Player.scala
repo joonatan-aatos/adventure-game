@@ -5,14 +5,14 @@ import scala.collection.immutable.HashSet
 import scala.collection.mutable.ArrayBuffer
 
 class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
-  // TODO: Make keysPressed array thread-safe
   private var keysPressed = HashSet[Int]()
 
   private val movementSpeed = 0.05f
   private val playerSize = 0.3f
-  private val attackSize = 1f
+  private val attackSize = 1.2f
   var input: (Float, Float) = (0f, 0f)
   var facingDirection: Direction = Direction.Down
+  var health = 3
 
   // The player is attacking if attackingTimer != 0
   @volatile var attackingTimer: Int = 0

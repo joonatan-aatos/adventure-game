@@ -4,7 +4,7 @@ import logic.{Bat, Direction, Player, Sprite, Stage, Tile, World}
 import visualizer.ResourceHelper.{batIdleMap, batRunningMap, playerAttackingMap, playerIdleMap, playerRunningMap}
 
 import java.awt.image.{BufferedImage, ImageObserver}
-import java.awt.{Color, Graphics2D}
+import java.awt.{BasicStroke, Color, Graphics2D}
 import scala.annotation.unused
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -45,6 +45,8 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     drawSprites(g, world.sprites)
     // Draw all tiles above the player
     drawTiles(g, tilesAbovePlayer.toVector)
+    // Draw HUD on top of everything else
+    drawHUD(g, player)
   }
 
   def drawPlayer(g: Graphics2D, player: Player): Unit = {
@@ -109,6 +111,28 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
         math.round(coords._2),
         tileSize,
         tileSize,
+        imageObserver
+      )
+    }
+  }
+
+  def drawHUD(g: Graphics2D, player: Player): Unit = {
+    val heartSize = 36
+    val heartPadding = 2
+    val barPadding = 12
+    g.setColor(new Color(0, 0, 0, 150))
+    g.fillRect(barPadding, barPadding, (heartSize + heartPadding) * 3 + heartPadding, heartSize + heartPadding * 2)
+    g.setColor(new Color(0, 0, 0))
+    g.setStroke(new BasicStroke(4))
+    g.drawRect(barPadding, barPadding, (heartSize + heartPadding) * 3 + heartPadding, heartSize + heartPadding * 2)
+    for (i <- 0 until 3) {
+      val image = if i < player.health then ResourceHelper.FULL_HEART else ResourceHelper.DEPLETED_HEART
+      g.drawImage(
+        image,
+        barPadding + heartPadding + i * (heartSize + heartPadding),
+        barPadding + heartPadding,
+        heartSize,
+        heartSize,
         imageObserver
       )
     }
