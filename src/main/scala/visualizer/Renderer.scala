@@ -1,7 +1,7 @@
 package visualizer
 
 import logic.{Bat, Direction, Player, Sprite, Stage, Tile, World}
-import visualizer.ResourceHelper.{batIdleMap, batRunningMap, playerAttackingMap, playerIdleMap, playerRunningMap}
+import visualizer.ResourceHelper.{batIdleMap, batRunningMap, playerAttackingMap, playerIdleMap, playerRunningMap, playerTakingDamageMap}
 
 import java.awt.image.{BufferedImage, ImageObserver}
 import java.awt.{BasicStroke, Color, Graphics2D}
@@ -52,6 +52,7 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
   def drawPlayer(g: Graphics2D, player: Player): Unit = {
     val animationMap = {
       if player.attackingTimer != 0 then playerAttackingMap
+      else if player.takingDamageTimer != 0 then playerTakingDamageMap
       else if player.input._1 == 0 && player.input._2 == 0 then playerIdleMap
       else playerRunningMap
     }

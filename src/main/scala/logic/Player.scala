@@ -6,7 +6,6 @@ import scala.collection.mutable.ArrayBuffer
 
 class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   private var keysPressed = HashSet[Int]()
-
   private val movementSpeed = 0.05f
   private val playerSize = 0.3f
   private val attackSize = 1.2f
@@ -17,8 +16,14 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   // The player is attacking if attackingTimer != 0
   @volatile var attackingTimer: Int = 0
   private val attackLength = 21
+  var takingDamageTimer: Int = 0
+  private val takingDamageLength = 24
 
   override def tick(world: World): Unit = {
+    if takingDamageTimer != 0 then {
+      takingDamageTimer -= 1
+      return
+    }
     if attackingTimer != 0 then {
       attackingTimer -= 1
       if attackingTimer == 10 then {
@@ -42,6 +47,7 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
 
   def takeHit(): Unit = {
     health = math.max(0, health - 1)
+    takingDamageTimer = takingDamageLength
   }
 
   private def captureNormalizedInput(): (Float, Float) = {
@@ -65,7 +71,7 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   }
 
   private def startAttack(direction: Direction): Unit = {
-    if attackingTimer != 0 then return
+    if attackingTimer != 0 || takingDamageTimer != 0 then return
     attackingTimer = attackLength
     facingDirection = direction
   }
