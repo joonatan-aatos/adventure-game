@@ -1,6 +1,6 @@
 package visualizer
 
-import logic.Directions
+import logic.Direction
 
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
@@ -73,44 +73,44 @@ object ResourceHelper {
   val PLAYER_ATTACKING_LEFT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 0, 272, 6, SPRITE_SIZE * 3), 3)
   val PLAYER_ATTACKING_RIGHT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 0, 320, 6, SPRITE_SIZE * 3), 3)
 
-  val playerIdleMap: Map[Directions.Value, Animation] = Map[Directions.Value, Animation](
-    Directions.Up -> PLAYER_IDLE_UP,
-    Directions.Down -> PLAYER_IDLE_DOWN,
-    Directions.Left -> PLAYER_IDLE_LEFT,
-    Directions.Right -> PLAYER_IDLE_RIGHT
+  val playerIdleMap: Map[Direction, Animation] = Map[Direction, Animation](
+    Direction.Up -> PLAYER_IDLE_UP,
+    Direction.Down -> PLAYER_IDLE_DOWN,
+    Direction.Left -> PLAYER_IDLE_LEFT,
+    Direction.Right -> PLAYER_IDLE_RIGHT
   )
 
-  val playerRunningMap: Map[Directions.Value, Animation] = Map[Directions.Value, Animation](
-    Directions.Up -> PLAYER_RUNNING_UP,
-    Directions.Down -> PLAYER_RUNNING_DOWN,
-    Directions.Left -> PLAYER_RUNNING_LEFT,
-    Directions.Right -> PLAYER_RUNNING_RIGHT
+  val playerRunningMap: Map[Direction, Animation] = Map[Direction, Animation](
+    Direction.Up -> PLAYER_RUNNING_UP,
+    Direction.Down -> PLAYER_RUNNING_DOWN,
+    Direction.Left -> PLAYER_RUNNING_LEFT,
+    Direction.Right -> PLAYER_RUNNING_RIGHT
   )
 
-  val playerAttackingMap: Map[Directions.Value, Animation] = Map[Directions.Value, Animation](
-    Directions.Up -> PLAYER_ATTACKING_UP,
-    Directions.Down -> PLAYER_ATTACKING_DOWN,
-    Directions.Left -> PLAYER_ATTACKING_LEFT,
-    Directions.Right -> PLAYER_ATTACKING_RIGHT
+  val playerAttackingMap: Map[Direction, Animation] = Map[Direction, Animation](
+    Direction.Up -> PLAYER_ATTACKING_UP,
+    Direction.Down -> PLAYER_ATTACKING_DOWN,
+    Direction.Left -> PLAYER_ATTACKING_LEFT,
+    Direction.Right -> PLAYER_ATTACKING_RIGHT
   )
 
   /****** BAT SPRITE SHEET ******/
 
   val BAT_SPRITESHEET: BufferedImage = ImageIO.read(getClass.getResourceAsStream("/img/Enemies_Sprites/Pinkbat_Sprites/pinkbat_spritesheet.png"))
 
-  val BAT_IDLE_LEFT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 0, 48, 5, SPRITE_SIZE), 6)
-  val BAT_IDLE_RIGHT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 0, 64, 5, SPRITE_SIZE), 6)
+  val BAT_IDLE_LEFT: Animation = new Animation(readSpriteSheat(BAT_SPRITESHEET, 0, 48, 5, SPRITE_SIZE), 6)
+  val BAT_IDLE_RIGHT: Animation = new Animation(readSpriteSheat(BAT_SPRITESHEET, 0, 64, 5, SPRITE_SIZE), 6)
 
-  val BAT_RUNNING_LEFT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 96, 48, 3, SPRITE_SIZE), 6)
-  val BAT_RUNNING_RIGHT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 96, 64, 3, SPRITE_SIZE), 6)
+  val BAT_RUNNING_LEFT: Animation = new Animation(readSpriteSheat(BAT_SPRITESHEET, 96, 48, 3, SPRITE_SIZE), 6)
+  val BAT_RUNNING_RIGHT: Animation = new Animation(readSpriteSheat(BAT_SPRITESHEET, 96, 64, 3, SPRITE_SIZE), 6)
   
-  val batIdleMap: Map[Directions.Value, Animation] = Map[Directions.Value, Animation](
-    Directions.Left -> BAT_IDLE_LEFT,
-    Directions.Right -> BAT_IDLE_RIGHT
+  val batIdleMap: Map[Direction, Animation] = Map[Direction, Animation](
+    Direction.Left -> BAT_IDLE_LEFT,
+    Direction.Right -> BAT_IDLE_RIGHT
   )
 
-  val batRunningMap: Map[Directions.Value, Animation] = Map[Directions.Value, Animation](
-    Directions.Left -> BAT_RUNNING_LEFT,
-    Directions.Right -> BAT_RUNNING_RIGHT
+  val batRunningMap: Map[Direction, Animation] = Map[Direction, Animation](
+    Direction.Left -> BAT_RUNNING_LEFT,
+    Direction.Right -> BAT_RUNNING_RIGHT
   )
 }

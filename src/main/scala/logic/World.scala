@@ -9,6 +9,8 @@ class World {
 
   val player = new Player(5, 5)
   sprites.append(player)
+  val bat = new Bat(7, 7)
+  sprites.append(bat)
 
   def tick(): Unit = {
     for (sprite <- sprites) {

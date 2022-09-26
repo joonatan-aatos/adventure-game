@@ -1,17 +1,19 @@
 package visualizer
 
-import logic.{Directions, Player, Sprite, Stage, Tile, World}
-import visualizer.ResourceHelper.{playerAttackingMap, playerIdleMap, playerRunningMap}
+import logic.{Bat, Direction, Player, Sprite, Stage, Tile, World}
+import visualizer.ResourceHelper.{batIdleMap, batRunningMap, playerAttackingMap, playerIdleMap, playerRunningMap}
 
-import java.awt.image.ImageObserver
+import java.awt.image.{BufferedImage, ImageObserver}
 import java.awt.{Color, Graphics2D}
 import scala.annotation.unused
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) {
   private val scalingFactor = tileSize.toFloat / 16f
 
   private var playerAnimation: Animation = ResourceHelper.PLAYER_IDLE_DOWN
+  private val spriteAnimations: mutable.HashMap[Sprite, Animation] = mutable.HashMap[Sprite, Animation]()
 
   def calculateDisplayCoords(worldXPos: Float, worldYPos: Float): (Float, Float) =
     (worldXPos * tileSize - camera.xPos, worldYPos * tileSize - camera.yPos)
@@ -27,8 +29,8 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     // Draw first layer of tiles
     drawTiles(g, filterVisibleTiles(world.stage.tilesLayer1))
     // Devide second layer of tiles into two:
-    // * tiles that should be rendered above the player and
-    // * tiles that should be rendered below the player
+    // * tiles that should be rendered above sprites and
+    // * tiles that should be rendered below sprites
     val player = world.player
     val tilesBelowPlayer = ArrayBuffer[Tile]()
     val tilesAbovePlayer = ArrayBuffer[Tile]()
@@ -38,8 +40,9 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     }
     // Draw all tiles below the player
     drawTiles(g, tilesBelowPlayer.toVector)
-    // Draw the player itself
+    // Draw sprites
     drawPlayer(g, player)
+    drawSprites(g, world.sprites)
     // Draw all tiles above the player
     drawTiles(g, tilesAbovePlayer.toVector)
   }
@@ -64,6 +67,36 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
       Math.round(image.getHeight * scalingFactor),
       imageObserver
     )
+  }
+
+  def drawSprites(g: Graphics2D, sprites: ArrayBuffer[Sprite]): Unit = {
+    for (sprite <- sprites) {
+      var image: Option[BufferedImage] = None
+      sprite match
+        case bat: Bat =>
+          val animationMap = {
+            if bat.target.isDefined then batRunningMap
+            else batIdleMap
+          }
+          val animation = animationMap(bat.facingDirection)
+          val previousAnimation = if spriteAnimations.contains(bat) then spriteAnimations(bat) else animation
+          if animation != previousAnimation then
+            previousAnimation.reset()
+            spriteAnimations += (bat -> animation)
+          image = Option(animation.getFrame)
+        case _ =>
+
+      if image.isDefined then
+        val coords = calculateDisplayCoords(sprite.xPos, sprite.yPos)
+        g.drawImage(
+          image.get,
+          Math.round(coords._1 - image.get.getWidth * scalingFactor * 0.5f),
+          Math.round(coords._2 - image.get.getHeight * scalingFactor * 0.5f - tileSize * 0.2f),
+          Math.round(image.get.getWidth * scalingFactor),
+          Math.round(image.get.getHeight * scalingFactor),
+          imageObserver
+        )
+    }
   }
 
   def drawTiles(g: Graphics2D, tiles: Vector[Tile]): Unit = {

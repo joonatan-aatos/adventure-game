@@ -3,14 +3,15 @@ package logic
 import java.awt.event.{KeyEvent, KeyListener}
 import scala.collection.mutable.ArrayBuffer
 
-class Player(val x: Float, val y: Float) extends Sprite(x, y), KeyListener {
+class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   // TODO: Make keysPressed array thread-safe
   private val keysPressed: ArrayBuffer[Int] = ArrayBuffer[Int]()
 
-  private val playerSpeed = 0.06f
+  private val movementSpeed = 0.05f
   private val playerSize = 0.3f
+  private val attackSize = 1f
   var input: (Float, Float) = (0f, 0f)
-  var facingDirection: Directions.Value = Directions.Down
+  var facingDirection: Direction = Direction.Down
 
   // The player is attacking if attackingTimer != 0
   @volatile var attackingTimer: Int = 0
@@ -19,20 +20,23 @@ class Player(val x: Float, val y: Float) extends Sprite(x, y), KeyListener {
   override def tick(world: World): Unit = {
     if attackingTimer != 0 then {
       attackingTimer -= 1
+      if attackingTimer == 10 then {
+        attack(world)
+      }
       return
     }
     input = captureNormalizedInput()
     if input._1 != 0 then
-      facingDirection = if input._1 > 0 then Directions.Right else Directions.Left
+      facingDirection = if input._1 > 0 then Direction.Right else Direction.Left
     else if input._2 != 0 then
-      facingDirection = if input._2 > 0 then Directions.Down else Directions.Up
+      facingDirection = if input._2 > 0 then Direction.Down else Direction.Up
 
-    val dx = input._1 * playerSpeed
-    val dy = input._2 * playerSpeed
+    val dx = input._1 * movementSpeed
+    val dy = input._2 * movementSpeed
     if canBeInPosition(world.stage, xPos + dx, yPos) then
-      xPos += input._1 * playerSpeed
+      xPos += input._1 * movementSpeed
     if canBeInPosition(world.stage, xPos, yPos + dy) then
-      yPos += input._2 * playerSpeed
+      yPos += input._2 * movementSpeed
   }
 
   private def captureNormalizedInput(): (Float, Float) = {
@@ -55,10 +59,33 @@ class Player(val x: Float, val y: Float) extends Sprite(x, y), KeyListener {
     stage.canBeInPosition(x - offset, y - offset)
   }
 
-  private def startAttack(direction: Directions.Value): Unit = {
+  private def startAttack(direction: Direction): Unit = {
     if attackingTimer != 0 then return
     attackingTimer = attackLength
     facingDirection = direction
+  }
+
+  private def attack(world: World): Unit = {
+    for (sprite <- world.sprites) {
+      // TODO: Implement Enemy superclass that implements method getHit
+      sprite match {
+        case bat: Bat =>
+          facingDirection match
+            case Direction.Up =>
+              if xPos - attackSize < sprite.xPos && sprite.xPos < xPos + attackSize && yPos - attackSize < sprite.yPos && sprite.yPos < yPos then
+                bat.getHit()
+            case Direction.Down =>
+              if xPos - attackSize < sprite.xPos && sprite.xPos < xPos + attackSize && yPos < sprite.yPos && sprite.yPos < yPos + attackSize then
+                bat.getHit()
+            case Direction.Left =>
+              if xPos - attackSize < sprite.xPos && sprite.xPos < xPos && yPos - attackSize < sprite.yPos && sprite.yPos < yPos + attackSize then
+                bat.getHit()
+            case Direction.Right =>
+              if xPos < sprite.xPos && sprite.xPos < xPos + attackSize && yPos - attackSize < sprite.yPos && sprite.yPos < yPos + attackSize then
+                bat.getHit()
+        case _ =>
+      }
+    }
   }
 
   override def keyPressed(keyEvent: KeyEvent): Unit = {
@@ -68,10 +95,10 @@ class Player(val x: Float, val y: Float) extends Sprite(x, y), KeyListener {
 
     code match {
       case KeyEvent.VK_SPACE => startAttack(facingDirection)
-      case KeyEvent.VK_UP => startAttack(Directions.Up)
-      case KeyEvent.VK_DOWN => startAttack(Directions.Down)
-      case KeyEvent.VK_LEFT => startAttack(Directions.Left)
-      case KeyEvent.VK_RIGHT => startAttack(Directions.Right)
+      case KeyEvent.VK_UP => startAttack(Direction.Up)
+      case KeyEvent.VK_DOWN => startAttack(Direction.Down)
+      case KeyEvent.VK_LEFT => startAttack(Direction.Left)
+      case KeyEvent.VK_RIGHT => startAttack(Direction.Right)
       case _ =>
     }
   }
@@ -81,4 +108,6 @@ class Player(val x: Float, val y: Float) extends Sprite(x, y), KeyListener {
   }
 
   override def keyTyped(keyEvent: KeyEvent): Unit = {}
+
+  override def toString: String = s"Player ($xPos, $yPos)"
 }
