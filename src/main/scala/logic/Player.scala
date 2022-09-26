@@ -1,11 +1,12 @@
 package logic
 
 import java.awt.event.{KeyEvent, KeyListener}
+import scala.collection.immutable.HashSet
 import scala.collection.mutable.ArrayBuffer
 
 class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   // TODO: Make keysPressed array thread-safe
-  private val keysPressed: ArrayBuffer[Int] = ArrayBuffer[Int]()
+  private var keysPressed = HashSet[Int]()
 
   private val movementSpeed = 0.05f
   private val playerSize = 0.3f
@@ -91,7 +92,7 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   override def keyPressed(keyEvent: KeyEvent): Unit = {
     val code = keyEvent.getKeyCode
     if !keysPressed.contains(code) then
-      keysPressed.append(code)
+      keysPressed += code
 
     code match {
       case KeyEvent.VK_SPACE => startAttack(facingDirection)
