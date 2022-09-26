@@ -22,24 +22,9 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   private val dyingLength = 120
 
   override def tick(world: World): Unit = {
-    // Handle timers
-    if dyingTimer != 0 then {
-      if dyingTimer == 1 then
-        shouldBeDeleted = true
-      dyingTimer -= 1
-      return
-    }
-    if takingDamageTimer != 0 then {
-      takingDamageTimer -= 1
-      return
-    }
-    if attackingTimer != 0 then {
-      attackingTimer -= 1
-      if attackingTimer == 10 then {
-        attack(world)
-      }
-      return
-    }
+
+    // Return if there was a timer to handle
+    if handelTimers(world) then return
 
     // Handle input
     input = captureNormalizedInput()
@@ -64,6 +49,28 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
       dyingTimer = dyingLength
       return;
     takingDamageTimer = takingDamageLength
+  }
+
+  private def handelTimers(world: World): Boolean = {
+    var shouldReturn = false
+    if dyingTimer != 0 then {
+      if dyingTimer == 1 then
+        shouldBeDeleted = true
+      dyingTimer -= 1
+      shouldReturn = true
+    }
+    if takingDamageTimer != 0 then {
+      takingDamageTimer -= 1
+      shouldReturn = true
+    }
+    if attackingTimer != 0 then {
+      attackingTimer -= 1
+      if attackingTimer == 10 then {
+        attack(world)
+      }
+      shouldReturn = true
+    }
+    shouldReturn
   }
 
   private def captureNormalizedInput(): (Float, Float) = {

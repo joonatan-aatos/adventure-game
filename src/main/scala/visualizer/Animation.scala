@@ -6,6 +6,9 @@ class Animation(val frames: Vector[BufferedImage], val delay: Int) {
   private var frameIndex = 0
   private var timer = 0
 
+  def this(animation: Animation) =
+    this(animation.frames, animation.delay)
+
   def getFrame: BufferedImage = {
     if delay == 0 then return frames(0)
     timer += 1

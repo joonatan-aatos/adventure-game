@@ -85,12 +85,13 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
             if bat.target.isDefined then batRunningMap
             else batIdleMap
           }
-          val animation = animationMap(bat.facingDirection)
-          val previousAnimation = if spriteAnimations.contains(bat) then spriteAnimations(bat) else animation
-          if animation != previousAnimation then
+          val animationDefined = spriteAnimations.contains(bat)
+          val animation = new Animation(animationMap(bat.facingDirection))
+          val previousAnimation = if animationDefined then spriteAnimations(bat) else animation
+          if animation.frames != previousAnimation.frames || !animationDefined then
             previousAnimation.reset()
             spriteAnimations += (bat -> animation)
-          image = Option(animation.getFrame)
+          image = Option(previousAnimation.getFrame)
         case _ =>
 
       if image.isDefined then

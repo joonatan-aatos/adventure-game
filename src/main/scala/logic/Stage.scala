@@ -28,13 +28,13 @@ class Stage {
   private val layerInstancesJSON = worldJSON("levels")(0)("layerInstances")
 
   // Tiles (only visual)
-  private val tilesLayer1JSON = layerInstancesJSON(2)("gridTiles").as[Seq[JsValue]]
-  private val tilesLayer2JSON = layerInstancesJSON(1)("gridTiles").as[Seq[JsValue]]
+  private val tilesLayer1JSON = layerInstancesJSON(3)("gridTiles").as[Seq[JsValue]]
+  private val tilesLayer2JSON = layerInstancesJSON(2)("gridTiles").as[Seq[JsValue]]
   val tilesLayer1: Vector[Tile] = tilesLayer1JSON.map((tile: JsValue) => parseTile(tile)).toVector
   val tilesLayer2: Vector[Tile] = tilesLayer2JSON.map((tile: JsValue) => parseTile(tile)).toVector
 
   // Collision map (effects player movement)
-  private val collisionMapJSON = layerInstancesJSON(0)
+  private val collisionMapJSON = layerInstancesJSON(1)
   private val collisionMapSeq = collisionMapJSON("intGridCsv").as[Seq[Int]]
   private val collisionMapWidth = collisionMapJSON("__cWid").as[Int]
   private val collisionMapHeight = collisionMapJSON("__cHei").as[Int]
@@ -51,6 +51,20 @@ class Stage {
   }
   val worldWidth: Int = collisionMapWidth / 2
   val worldHeight: Int = collisionMapHeight / 2
+
+  // Entities (Defines spawn points for entities)
+  private val entitiesJSON = layerInstancesJSON(0)
+  private val entityInstancesSeq = entitiesJSON("entityInstances").as[Seq[JsValue]]
+  val entities: Vector[(String, (Int, Int))] = {
+    val entitiesArray = ArrayBuffer[(String, (Int, Int))]()
+    for (entityJSON <- entityInstancesSeq) {
+      val entityType = entityJSON("__identifier").as[String]
+      val positionSeq = entityJSON("__grid").as[Seq[Int]]
+      val entity: (String, (Int, Int)) = (entityType, (positionSeq.head, positionSeq(1)))
+      entitiesArray += entity
+    }
+    entitiesArray.toVector
+  }
 
   // Size of a tile in the collision map is half a tile
   def canBeInPosition(xPos: Float, yPos: Float): Boolean = collisionMap(math.floor(xPos*2).toInt)(math.floor(yPos*2).toInt)

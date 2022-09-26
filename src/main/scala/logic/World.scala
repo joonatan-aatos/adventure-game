@@ -6,11 +6,17 @@ class World {
   val stage: Stage = new Stage()
   val sprites: ArrayBuffer[Sprite] = ArrayBuffer[Sprite]()
   private val spritesToBeRemoved = ArrayBuffer[Sprite]()
+  private var playerOption: Option[Player] = None
 
-  val player = new Player(5, 5)
-  sprites.append(player)
-  val bat = new Bat(7, 7)
-  sprites.append(bat)
+  for (entity <- stage.entities) {
+    entity._1 match
+      case "Player" =>
+        playerOption = Option(new Player(entity._2._1.toFloat, entity._2._2.toFloat))
+        sprites.append(playerOption.get)
+      case "Bat" =>
+        sprites.append(new Bat(entity._2._1.toFloat, entity._2._2.toFloat))
+  }
+  val player: Player = playerOption.get
 
   def tick(): Unit = {
     for (sprite <- sprites) {
