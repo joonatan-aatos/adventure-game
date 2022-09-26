@@ -17,9 +17,18 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   @volatile var attackingTimer: Int = 0
   private val attackLength = 21
   var takingDamageTimer: Int = 0
-  private val takingDamageLength = 24
+  private val takingDamageLength = 30
+  var dyingTimer: Int = 0
+  private val dyingLength = 120
 
   override def tick(world: World): Unit = {
+    // Handle timers
+    if dyingTimer != 0 then {
+      if dyingTimer == 1 then
+        shouldBeDeleted = true
+      dyingTimer -= 1
+      return
+    }
     if takingDamageTimer != 0 then {
       takingDamageTimer -= 1
       return
@@ -31,12 +40,15 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
       }
       return
     }
+
+    // Handle input
     input = captureNormalizedInput()
     if input._1 != 0 then
       facingDirection = if input._1 > 0 then Direction.Right else Direction.Left
     else if input._2 != 0 then
       facingDirection = if input._2 > 0 then Direction.Down else Direction.Up
 
+    // Handle movement
     val dx = input._1 * movementSpeed
     val dy = input._2 * movementSpeed
     if canBeInPosition(world.stage, xPos + dx, yPos) then
@@ -46,7 +58,11 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   }
 
   def takeHit(): Unit = {
+    if dyingTimer != 0 || shouldBeDeleted then return
     health = math.max(0, health - 1)
+    if health == 0 then
+      dyingTimer = dyingLength
+      return;
     takingDamageTimer = takingDamageLength
   }
 

@@ -25,7 +25,6 @@ class Visualizer {
   val renderer = new Renderer(canvas.asInstanceOf[ImageObserver], camera, TILE_SIZE)
   frame.add(canvas)
 
-
   def addEventListener(eventListener: EventListener): Unit = {
     eventListener match {
       case e: KeyListener => canvas.addKeyListener(e)
@@ -38,9 +37,6 @@ class Visualizer {
     if canvasGraphics == null then return
     val canvasImage = canvas.createImage(WINDOW_WIDTH, WINDOW_HEIGHT)
     val graphics = canvasImage.getGraphics.asInstanceOf[Graphics2D]
-
-    //graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    //graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
     camera.updatePosition(world.player.xPos, world.player.yPos, world.stage.worldWidth, world.stage.worldHeight)
     renderer.draw(graphics, world)

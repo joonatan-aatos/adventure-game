@@ -62,10 +62,12 @@ object ResourceHelper {
   val PLAYER_RUNNING_RIGHT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 16, 48, 6, SPRITE_SIZE), 6)
   val PLAYER_RUNNING_UP: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 16, 64, 6, SPRITE_SIZE), 6)
 
-  val PLAYER_TAKING_DAMAGE_DOWN: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 240, 16, 3, SPRITE_SIZE), 6)
-  val PLAYER_TAKING_DAMAGE_LEFT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 240, 32, 3, SPRITE_SIZE), 6)
-  val PLAYER_TAKING_DAMAGE_RIGHT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 240, 48, 3, SPRITE_SIZE), 6)
-  val PLAYER_TAKING_DAMAGE_UP: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 240, 64, 3, SPRITE_SIZE), 6)
+  val PLAYER_TAKING_DAMAGE_DOWN: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 240, 16, 3, SPRITE_SIZE), 10)
+  val PLAYER_TAKING_DAMAGE_LEFT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 240, 32, 3, SPRITE_SIZE), 10)
+  val PLAYER_TAKING_DAMAGE_RIGHT: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 240, 48, 3, SPRITE_SIZE), 10)
+  val PLAYER_TAKING_DAMAGE_UP: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 240, 64, 3, SPRITE_SIZE), 10)
+
+  val PLAYER_DYING: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 16, 176, 6, SPRITE_SIZE), 20)
 
   val PLAYER_ATTACKING_DOWN: Animation = new Animation(readSpriteSheat(PLAYER_SPRITESHEET, 0, 192, 6, SPRITE_SIZE * 3), 3)
   // TODO: Find a better way to read this animation from the sprite sheet

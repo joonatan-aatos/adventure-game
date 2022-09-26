@@ -50,13 +50,17 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
   }
 
   def drawPlayer(g: Graphics2D, player: Player): Unit = {
+    if player.shouldBeDeleted then return
     val animationMap = {
       if player.attackingTimer != 0 then playerAttackingMap
       else if player.takingDamageTimer != 0 then playerTakingDamageMap
       else if player.input._1 == 0 && player.input._2 == 0 then playerIdleMap
       else playerRunningMap
     }
-    val animation = animationMap(player.facingDirection)
+    val animation = {
+      if player.dyingTimer != 0 then ResourceHelper.PLAYER_DYING
+      else animationMap(player.facingDirection)
+    }
     if animation != playerAnimation then
       playerAnimation.reset()
       playerAnimation = animation
