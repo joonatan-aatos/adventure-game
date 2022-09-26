@@ -36,19 +36,21 @@ class Stage {
   // Collision map (effects player movement)
   private val collisionMapJSON = layerInstancesJSON(0)
   private val collisionMapSeq = collisionMapJSON("intGridCsv").as[Seq[Int]]
-  val worldWidth: Int = collisionMapJSON("__cWid").as[Int]
-  val worldHeight: Int = collisionMapJSON("__cHei").as[Int]
+  private val collisionMapWidth = collisionMapJSON("__cWid").as[Int]
+  private val collisionMapHeight = collisionMapJSON("__cHei").as[Int]
   val collisionMap: Vector[Vector[Boolean]] = {
     val map = ArrayBuffer[Vector[Boolean]]()
-    for (x <- 0 until worldWidth) {
+    for (x <- 0 until collisionMapWidth) {
       val column = ArrayBuffer[Boolean]()
-      for (y <- 0 until worldHeight) {
-        column.append(collisionMapSeq(y * worldWidth + x) == 0)
+      for (y <- 0 until collisionMapHeight) {
+        column.append(collisionMapSeq(y * collisionMapWidth + x) == 0)
       }
       map.append(column.toVector)
     }
     map.toVector
   }
+  val worldWidth: Int = collisionMapWidth / 2
+  val worldHeight: Int = collisionMapHeight / 2
 
   // Size of a tile in the collision map is half a tile
   def canBeInPosition(xPos: Float, yPos: Float): Boolean = collisionMap(math.floor(xPos*2).toInt)(math.floor(yPos*2).toInt)

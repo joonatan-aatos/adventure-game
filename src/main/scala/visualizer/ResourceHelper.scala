@@ -31,7 +31,7 @@ object ResourceHelper {
     tiles.toVector
   }
 
-  val overworldTiles: Vector[Vector[BufferedImage]] = readTileSet(OVERWORLD_TILESET, 17, 13)
+  val overworldTiles: Vector[Vector[BufferedImage]] = readTileSet(OVERWORLD_TILESET, 18, 13)
 
   /****** SPRITE SHEET ******/
 
