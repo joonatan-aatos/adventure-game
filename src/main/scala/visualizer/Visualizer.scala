@@ -14,7 +14,7 @@ class Visualizer {
   val TILE_SIZE = 60
 
   val frame = new JFrame()
-  frame.setTitle("Rikki")
+  frame.setTitle("Seikkailupeli")
   frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT)
   frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
   frame.setResizable(false)

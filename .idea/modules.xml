@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rikki.iml" filepath="$PROJECT_DIR$/.idea/modules/rikki.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rikki-build.iml" filepath="$PROJECT_DIR$/.idea/modules/rikki-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/seikkailupeli.iml" filepath="$PROJECT_DIR$/.idea/modules/seikkailupeli.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/seikkailupeli-build.iml" filepath="$PROJECT_DIR$/.idea/modules/seikkailupeli-build.iml" />
     </modules>
   </component>
 </project>
