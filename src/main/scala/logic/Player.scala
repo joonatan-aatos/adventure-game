@@ -40,6 +40,10 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
       yPos += input._2 * movementSpeed
   }
 
+  def takeHit(): Unit = {
+    health = math.max(0, health - 1)
+  }
+
   private def captureNormalizedInput(): (Float, Float) = {
     var dx = 0
     var dy = 0
@@ -74,16 +78,16 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
           facingDirection match
             case Direction.Up =>
               if xPos - attackSize < sprite.xPos && sprite.xPos < xPos + attackSize && yPos - attackSize < sprite.yPos && sprite.yPos < yPos then
-                bat.getHit()
+                bat.takeHit()
             case Direction.Down =>
               if xPos - attackSize < sprite.xPos && sprite.xPos < xPos + attackSize && yPos < sprite.yPos && sprite.yPos < yPos + attackSize then
-                bat.getHit()
+                bat.takeHit()
             case Direction.Left =>
               if xPos - attackSize < sprite.xPos && sprite.xPos < xPos && yPos - attackSize < sprite.yPos && sprite.yPos < yPos + attackSize then
-                bat.getHit()
+                bat.takeHit()
             case Direction.Right =>
               if xPos < sprite.xPos && sprite.xPos < xPos + attackSize && yPos - attackSize < sprite.yPos && sprite.yPos < yPos + attackSize then
-                bat.getHit()
+                bat.takeHit()
         case _ =>
       }
     }

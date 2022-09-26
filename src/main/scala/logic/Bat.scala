@@ -4,10 +4,14 @@ class Bat(x: Float, y: Float) extends Sprite(x, y) {
   private val targetDistanceThreshold = 5f
   private val attackDistanceThreshold = 0.5f
   private val movementSpeed = 0.03f
+  private val attackSpeed = 90
+  var attackingTimer = 0
   var facingDirection: Direction = Direction.Left
   var target: Option[Player] = None
 
   override def tick(world: World): Unit = {
+    if attackingTimer != 0 then attackingTimer -= 1
+
     val player = world.player
     val dx = player.xPos - xPos
     val dy = player.yPos - yPos
@@ -23,7 +27,9 @@ class Bat(x: Float, y: Float) extends Sprite(x, y) {
       return;
 
     if distance < attackDistanceThreshold then
+      attack(player)
       return;
+
     if dx < 0 then facingDirection = Direction.Left
     else if dx > 0 then facingDirection = Direction.Right
 
@@ -34,7 +40,13 @@ class Bat(x: Float, y: Float) extends Sprite(x, y) {
     yPos += dyNormalized * movementSpeed
   }
 
-  def getHit(): Unit = {
+  private def attack(player: Player): Unit = {
+    if attackingTimer == 0 then
+      player.takeHit()
+      attackingTimer = attackSpeed
+  }
+
+  def takeHit(): Unit = {
     // TODO: Implement dying animation
     shouldBeDeleted = true
   }
