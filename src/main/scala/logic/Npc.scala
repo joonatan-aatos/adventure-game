@@ -14,6 +14,7 @@ class Npc(x: Float, y: Float, val name: String, val dialog: Vector[String]) exte
   }
 
   def showDialog(world: World): Unit = {
-    world.game.showDialog(dialogWithName)
+    val formattedDialog = dialogWithName.map(s => s.replaceAll("\\{name\\}", world.player.name.capitalize))
+    world.game.showDialog(formattedDialog)
   }
 }

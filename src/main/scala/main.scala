@@ -9,6 +9,6 @@ def main(): Unit = {
   val engine = new Engine(game)
   engine.setDesiredFPS(gameTPS)
   engine.setDesiredTPS(gameTPS)
-  engine.printFps(true)
+  engine.printFps(false)
   engine.start()
 }

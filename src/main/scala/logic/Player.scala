@@ -15,6 +15,8 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   var input: (Float, Float) = (0f, 0f)
   var facingDirection: Direction = Direction.Down
   var health = 3
+  var swordInUse: Boolean = false
+  var name: String = ""
   private var worldOpt: Option[World] = None
 
   // The player is attacking if attackingTimer != 0
@@ -100,7 +102,7 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   }
 
   private def startAttack(direction: Direction): Unit = {
-    if attackingTimer != 0 || takingDamageTimer != 0 then return
+    if attackingTimer != 0 || takingDamageTimer != 0 || !swordInUse then return
     attackingTimer = attackLength
     facingDirection = direction
   }
@@ -139,6 +141,11 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
             ignoreInput = true
             input = (0f, 0f)
             npc.showDialog(world)
+            // TODO: Implement this logic elsewhere
+            if npc.name == "Antti" then
+              swordInUse = true
+            else if npc.name == "Tommi" then
+              world.winConditionMet = true
         case _ =>
       }
     }

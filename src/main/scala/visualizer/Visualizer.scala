@@ -32,6 +32,13 @@ class Visualizer {
     }
   }
 
+  def removeEventListener(eventListener: EventListener): Unit = {
+    eventListener match {
+      case e: KeyListener => canvas.removeKeyListener(e)
+      case e: MouseListener => canvas.removeMouseListener(e)
+    }
+  }
+
   def render(world: World, dialog: Option[String]): Unit = {
     val canvasGraphics = canvas.getGraphics
     if canvasGraphics == null then return

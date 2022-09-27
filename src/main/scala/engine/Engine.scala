@@ -90,7 +90,9 @@ class Engine(val gameInterface: GameInterface) extends Runnable, EngineInterface
         printFps = print;
     }
 
-    override def getFPS(): Int = currentFPS
+    override def getPrintFps: Boolean = printFps
 
-    override def getTPS(): Int = currentTPS
+    override def getFPS: Int = currentFPS
+
+    override def getTPS: Int = currentTPS
 }

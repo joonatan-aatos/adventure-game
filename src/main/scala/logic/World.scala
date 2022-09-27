@@ -7,6 +7,7 @@ class World(val game: GameLogicInterface) {
   val sprites: ArrayBuffer[Sprite] = ArrayBuffer[Sprite]()
   private val spritesToBeRemoved = ArrayBuffer[Sprite]()
   private var playerOption: Option[Player] = None
+  var winConditionMet = false
 
   for (entity <- stage.entities) {
     entity._1 match
