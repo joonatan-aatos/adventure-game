@@ -1,5 +1,12 @@
 package logic
 
+/**
+ * The Bat class represents a generic Bat enemy.
+ * It contains all logic regarding the behaviour of the Bat
+ * @param x Initial x position
+ * @param y Initial y position
+ * TODO: Implement common Enemy superclass
+ */
 class Bat(x: Float, y: Float) extends Sprite(x, y) {
   private val targetDistanceThreshold = 5f
   private val attackDistanceThreshold = 0.5f

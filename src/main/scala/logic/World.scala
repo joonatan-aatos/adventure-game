@@ -2,6 +2,11 @@ package logic
 
 import scala.collection.mutable.ArrayBuffer
 
+/**
+ * The World class represents the game world.
+ * It stores all sprites and all of the world state.
+ * @param game An interface for communicating with the Game object
+ */
 class World(val game: GameLogicInterface) {
   val stage: Stage = new Stage()
   val sprites: ArrayBuffer[Sprite] = ArrayBuffer[Sprite]()
@@ -9,6 +14,7 @@ class World(val game: GameLogicInterface) {
   private var playerOption: Option[Player] = None
   var winConditionMet = false
 
+  // Spawn all enteties defined by the stage
   for (entity <- stage.entities) {
     entity._1 match
       case "Player" =>
@@ -22,6 +28,9 @@ class World(val game: GameLogicInterface) {
   }
   val player: Player = playerOption.get
 
+  /**
+   * The tick function is called repeatedly by the game at a constant interval.
+   */
   def tick(): Unit = {
     for (sprite <- sprites) {
       sprite.tick(this)

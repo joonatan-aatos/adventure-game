@@ -4,7 +4,11 @@ object Engine {
   val UNLIMITED: Int = -1
 }
 
-// This class manages the main thread that the game is running on
+/**
+ * The Engine class manages the main thread that the game is running on.
+ * It keeps track of time and calculates when update() and render() should be called
+ * @param gameInterface Interface for invoking init(), update() and render() calls
+ */
 class Engine(val gameInterface: GameInterface) extends Runnable, EngineInterface {
 
     private var running = false
@@ -34,10 +38,10 @@ class Engine(val gameInterface: GameInterface) extends Runnable, EngineInterface
 
         while running do {
 
-            now = System.nanoTime();
+            now = System.nanoTime()
             unprocessedTicks += (now - before) / nsPerTick
             unprocessedFrames += (now - before) / nsPerFrame
-            before = now;
+            before = now
 
             if unprocessedTicks >= 1 then {
                 gameInterface.update()

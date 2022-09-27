@@ -1,5 +1,8 @@
 package engine
 
+/**
+ * The provided interface for accessing the Engine
+ */
 trait EngineInterface {
   def start(): Unit
   def stop(): Unit

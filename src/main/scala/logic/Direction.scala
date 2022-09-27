@@ -1,5 +1,8 @@
 package logic
 
+/**
+ * Represents one of four directions
+ */
 enum Direction(val vector: (Float, Float)):
   case Up extends Direction((0f, -1f))
   case Down extends Direction((0f, 1f))

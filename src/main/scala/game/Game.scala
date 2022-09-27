@@ -8,6 +8,11 @@ import java.awt.event.{KeyEvent, KeyListener, WindowEvent}
 import javax.swing.JOptionPane
 import scala.collection.mutable
 
+/**
+ * The Game class is responsible for orchestrating the whole game.
+ * In a sense, it is a glue between the World and the Visualizer.
+ * The Game class handles much of the program's higher level state.
+ */
 class Game extends GameInterface, GameLogicInterface, KeyListener {
   enum State {
     case Default

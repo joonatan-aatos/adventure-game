@@ -4,6 +4,12 @@ import java.awt.event.{KeyEvent, KeyListener}
 import scala.collection.immutable.HashSet
 import scala.collection.mutable.ArrayBuffer
 
+/**
+ * The player class represents the playable character in the game.
+ * It handles all player-related logic.
+ * @param x Initial x position
+ * @param y Initial y position
+ */
 class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   private var keysPressed = HashSet[Int]()
   private val movementSpeed = 0.05f

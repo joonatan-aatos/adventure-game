@@ -9,6 +9,12 @@ import scala.annotation.unused
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
+/**
+ * The renderer class handles all of the details when rendering a World
+ * @param imageObserver ImageObserver is given to most drawImage calls as a parameter
+ * @param camera The camera determines what part of the world is rendered
+ * @param tileSize The size of a single tile in pixels
+ */
 class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) {
   private val scalingFactor = tileSize.toFloat / 16f
 
@@ -18,6 +24,10 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
   def calculateDisplayCoords(worldXPos: Float, worldYPos: Float): (Float, Float) =
     (worldXPos * tileSize - camera.xPos, worldYPos * tileSize - camera.yPos)
 
+  /**
+   * @param tiles Tiles to be filtered
+   * @return All tiles that are visible defined by this.camera
+   */
   def filterVisibleTiles(tiles: Vector[Tile]): Vector[Tile] = tiles.filter(tile =>
     tile.pos._1 + 1 > camera.xPos / tileSize &&
     tile.pos._1 < (camera.xPos + camera.windowWidth) / tileSize &&

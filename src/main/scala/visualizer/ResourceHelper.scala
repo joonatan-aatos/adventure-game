@@ -6,6 +6,9 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import scala.collection.mutable.ArrayBuffer
 
+/**
+ * Helper class for loading resources such as tile sets and sprite sheets
+ */
 object ResourceHelper {
   val SPRITE_SIZE = 16
   val TILE_SIZE = 16

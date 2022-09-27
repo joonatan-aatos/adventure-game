@@ -7,10 +7,19 @@ import java.nio.file.{Files, Paths}
 import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 
+/**
+ * The Tile class represents a single tile in a stage.
+ * @param pos
+ * @param src
+ */
 class Tile(val pos: (Int, Int), val src: (Int, Int)) {
   override def toString: String = f"pos: $pos, src: $src"
 }
 
+/**
+ * The Stage class loads and parses the world file that is in JSON format.
+ * It also acts as an interface for interacting with the stage.
+ */
 class Stage {
 
   private def parseTile(tileJSON: JsValue): Tile = {

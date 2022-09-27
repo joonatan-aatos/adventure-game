@@ -8,6 +8,11 @@ import java.awt.{Canvas, Color, Graphics, Graphics2D, Image, RenderingHints}
 import java.util.EventListener
 import javax.swing.{JFrame, WindowConstants}
 
+/**
+ * The Visualizer class is responsible for rendering the game state.
+ * It creates a JFrame object and adds a Canvas to it.
+ * The game is rendered on said canvas.
+ */
 class Visualizer {
   val WINDOW_WIDTH = 800
   val WINDOW_HEIGHT = 800
@@ -39,6 +44,11 @@ class Visualizer {
     }
   }
 
+  /**
+   * Renders the given world
+   * @param world World object that is to be rendered
+   * @param dialog Any text that should be shown to the user (In this case, NPC dialog)
+   */
   def render(world: World, dialog: Option[String]): Unit = {
     val canvasGraphics = canvas.getGraphics
     if canvasGraphics == null then return

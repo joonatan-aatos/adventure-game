@@ -1,5 +1,13 @@
 package visualizer
 
+/**
+ * The Camera class keeps track of the players position and updates the location of itself accordingly
+ * @param xPos Initial x position
+ * @param yPos Initial y position
+ * @param windowWidth Width of the window that the game is rendered on
+ * @param windowHeight Height of thw window that the game is rendered on
+ * @param tileSize Size of a single tile in pixels
+ */
 class Camera(var xPos: Float, var yPos: Float, val windowWidth: Float, val windowHeight: Float, tileSize: Float) {
   private val cameraVelocity = 0.06f
   private val moveThreshold = tileSize * 0.5f

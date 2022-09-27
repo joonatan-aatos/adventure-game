@@ -1,5 +1,8 @@
 package engine
 
+/**
+ * The GameInterface is for the Engine to invoke init(), update(), and render() calls
+ */
 trait GameInterface {
   /** Called once upon starting the engine */
   def init(engine: EngineInterface): Unit
