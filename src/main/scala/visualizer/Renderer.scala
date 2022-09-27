@@ -158,6 +158,7 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     val dialogMargin = 100
     val dialogHeight = 300
     val textMargin = 30
+    // Draw black box
     g.setColor(new Color(0, 0, 0, 150))
     g.fillRect(
       dialogMargin,
@@ -173,9 +174,25 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
       camera.windowWidth.toInt - dialogMargin * 2,
       dialogHeight
     )
+    // Draw text
     g.setColor(Color.WHITE)
-    g.setFont(new Font("TimesRoman", Font.PLAIN, 30))
-    g.drawString(dialog, dialogMargin + textMargin, dialogMargin + textMargin * 2)
+    g.setFont(new Font("TimesRoman", Font.PLAIN, 24))
+    val fontHeight = g.getFontMetrics.getHeight
+    val maxLineWidth = camera.windowWidth - 2 * dialogMargin - 2 * textMargin
+    var line = ""
+    var currentLine = 1
+    // Automatically break lines when the line becomes bigger
+    val words = dialog.split(" ")
+    for (word <- words) {
+      val newLineWidth = g.getFontMetrics.getStringBounds(s"$line $word", g).getWidth
+      if newLineWidth > maxLineWidth then
+        g.drawString(line, dialogMargin + textMargin, dialogMargin + textMargin + currentLine * fontHeight)
+        line = word
+        currentLine += 1
+      else
+        line = if line.isEmpty then word else s"$line $word"
+    }
+    g.drawString(line, dialogMargin + textMargin, dialogMargin + textMargin + currentLine * fontHeight)
   }
 
   @unused

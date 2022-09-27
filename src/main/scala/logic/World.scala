@@ -19,7 +19,6 @@ class World(val game: GameLogicInterface) {
         sprites.append(new Npc(entity._2._1.toFloat, entity._2._2.toFloat, Vector()))
   }
   val player: Player = playerOption.get
-  sprites.append(new Npc(7, 7, Vector("Hei", "Minä olen NPC")))
 
   def tick(): Unit = {
     for (sprite <- sprites) {
