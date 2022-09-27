@@ -1,7 +1,7 @@
 package visualizer
 
-import logic.{Bat, Direction, Player, Sprite, Stage, Tile, World}
-import visualizer.ResourceHelper.{batIdleMap, batRunningMap, playerAttackingMap, playerIdleMap, playerRunningMap, playerTakingDamageMap}
+import logic.{Bat, Direction, NPC, Player, Sprite, Stage, Tile, World}
+import visualizer.ResourceHelper.{batIdleMap, batRunningMap, npcIdleMap, playerAttackingMap, playerIdleMap, playerRunningMap, playerTakingDamageMap}
 
 import java.awt.image.{BufferedImage, ImageObserver}
 import java.awt.{BasicStroke, Color, Graphics2D}
@@ -38,12 +38,11 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
       if tile.src._2 < 11 then tilesAbovePlayer.append(tile)
       else tilesBelowPlayer.append(tile)
     }
-    // Draw all tiles below the player
+    // Draw all tiles below sprites
     drawTiles(g, tilesBelowPlayer.toVector)
     // Draw sprites
-    drawPlayer(g, player)
     drawSprites(g, world.sprites)
-    // Draw all tiles above the player
+    // Draw all tiles above sprites
     drawTiles(g, tilesAbovePlayer.toVector)
     // Draw HUD on top of everything else
     drawHUD(g, player)
@@ -57,11 +56,11 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
       else if player.input._1 == 0 && player.input._2 == 0 then playerIdleMap
       else playerRunningMap
     }
-    val animation = {
+    val animation = new Animation({
       if player.dyingTimer != 0 then ResourceHelper.PLAYER_DYING
       else animationMap(player.facingDirection)
-    }
-    if animation != playerAnimation then
+    })
+    if animation.frames != playerAnimation.frames then
       playerAnimation.reset()
       playerAnimation = animation
     val image = playerAnimation.getFrame
@@ -77,7 +76,8 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
   }
 
   def drawSprites(g: Graphics2D, sprites: ArrayBuffer[Sprite]): Unit = {
-    for (sprite <- sprites) {
+    val sortedSprites = sprites.sortBy(_.yPos)
+    for (sprite <- sortedSprites) {
       var image: Option[BufferedImage] = None
       sprite match
         case bat: Bat =>
@@ -92,6 +92,16 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
             previousAnimation.reset()
             spriteAnimations += (bat -> animation)
           image = Option(previousAnimation.getFrame)
+        case npc: NPC =>
+          val animationMap = npcIdleMap
+          val animationDefined = spriteAnimations.contains(npc)
+          val animation = new Animation(animationMap(npc.facingDirection))
+          val previousAnimation = if animationDefined then spriteAnimations(npc) else animation
+          if animation.frames != previousAnimation.frames || !animationDefined then
+            previousAnimation.reset()
+            spriteAnimations += (npc -> animation)
+          image = Option(previousAnimation.getFrame)
+        case player: Player => drawPlayer(g, player)
         case _ =>
 
       if image.isDefined then

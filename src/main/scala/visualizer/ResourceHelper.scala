@@ -108,6 +108,22 @@ object ResourceHelper {
     Direction.Right -> PLAYER_ATTACKING_RIGHT
   )
 
+  /****** NPC SPRITE SHEET ******/
+
+  val NPC_SPRITESHEET: BufferedImage = ImageIO.read(getClass.getResourceAsStream("/img/Custom/npc_spritesheet.png"))
+
+  val NPC_IDLE_DOWN: Animation = new Animation(readSpriteSheat(NPC_SPRITESHEET, 0, 0, 6, SPRITE_SIZE), 10)
+  val NPC_IDLE_LEFT: Animation = new Animation(readSpriteSheat(NPC_SPRITESHEET, 0, 16, 6, SPRITE_SIZE), 10)
+  val NPC_IDLE_RIGHT: Animation = new Animation(readSpriteSheat(NPC_SPRITESHEET, 0, 32, 6, SPRITE_SIZE), 10)
+  val NPC_IDLE_UP: Animation = new Animation(readSpriteSheat(NPC_SPRITESHEET, 0, 48, 6, SPRITE_SIZE), 10)
+
+  val npcIdleMap: Map[Direction, Animation] = Map[Direction, Animation](
+    Direction.Up -> NPC_IDLE_UP,
+    Direction.Down -> NPC_IDLE_DOWN,
+    Direction.Left -> NPC_IDLE_LEFT,
+    Direction.Right -> NPC_IDLE_RIGHT
+  )
+
   /****** BAT SPRITE SHEET ******/
 
   val BAT_SPRITESHEET: BufferedImage = ImageIO.read(getClass.getResourceAsStream("/img/Enemies_Sprites/Pinkbat_Sprites/pinkbat_spritesheet.png"))
