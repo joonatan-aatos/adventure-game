@@ -1,0 +1,10 @@
+Pelin läpäisemisen ohjeet:
+
+1. Seuraa polkua etelään väistäen lepakoita, kunnes pääset kylälle.
+2. Etsi Antti, kylän päällikkö, ja juttele hänelle.
+3. Saatuasi miekan, palaa takaisin metsään (sinne mistä tulit) ja erkane oikealle pienemmälle polulle.
+4. Käytä miekkaasi lepakoihin ja juttele Tommille.
+
+Jos olet oikein CHAD assari, voit yrittä skippaa kaikki vaiheet ja mennä suoraan Tommin luokse.
+Tämä on kuitenkin testauksessa osoittautunut melko haastavaksi.
+
