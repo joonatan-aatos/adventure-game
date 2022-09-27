@@ -1,6 +1,6 @@
 package logic
 
-class NPC(x: Float, y: Float) extends Sprite(x, y) {
+class Npc(x: Float, y: Float, dialog: Vector[String]) extends Sprite(x, y) {
   var facingDirection: Direction = Direction.Down
   override def tick(world: World): Unit = {
     val player = world.player
@@ -10,5 +10,9 @@ class NPC(x: Float, y: Float) extends Sprite(x, y) {
       facingDirection = if dx > 0 then Direction.Right else Direction.Left
     else
       facingDirection = if dy > 0 then Direction.Down else Direction.Up
+  }
+
+  def showDialog(world: World): Unit = {
+    world.game.showDialog(dialog)
   }
 }

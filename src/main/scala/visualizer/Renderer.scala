@@ -1,10 +1,10 @@
 package visualizer
 
-import logic.{Bat, Direction, NPC, Player, Sprite, Stage, Tile, World}
+import logic.{Bat, Direction, Npc, Player, Sprite, Stage, Tile, World}
 import visualizer.ResourceHelper.{batIdleMap, batRunningMap, npcIdleMap, playerAttackingMap, playerIdleMap, playerRunningMap, playerTakingDamageMap}
 
 import java.awt.image.{BufferedImage, ImageObserver}
-import java.awt.{BasicStroke, Color, Graphics2D}
+import java.awt.{BasicStroke, Color, Font, Graphics2D}
 import scala.annotation.unused
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -92,7 +92,7 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
             previousAnimation.reset()
             spriteAnimations += (bat -> animation)
           image = Option(previousAnimation.getFrame)
-        case npc: NPC =>
+        case npc: Npc =>
           val animationMap = npcIdleMap
           val animationDefined = spriteAnimations.contains(npc)
           val animation = new Animation(animationMap(npc.facingDirection))
@@ -152,6 +152,30 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
         imageObserver
       )
     }
+  }
+
+  def drawDialog(g: Graphics2D, dialog: String): Unit = {
+    val dialogMargin = 100
+    val dialogHeight = 300
+    val textMargin = 30
+    g.setColor(new Color(0, 0, 0, 150))
+    g.fillRect(
+      dialogMargin,
+      dialogMargin,
+      camera.windowWidth.toInt - dialogMargin * 2,
+      dialogHeight
+    )
+    g.setColor(Color.BLACK)
+    g.setStroke(new BasicStroke(6))
+    g.drawRect(
+      dialogMargin,
+      dialogMargin,
+      camera.windowWidth.toInt - dialogMargin * 2,
+      dialogHeight
+    )
+    g.setColor(Color.WHITE)
+    g.setFont(new Font("TimesRoman", Font.PLAIN, 30))
+    g.drawString(dialog, dialogMargin + textMargin, dialogMargin + textMargin * 2)
   }
 
   @unused

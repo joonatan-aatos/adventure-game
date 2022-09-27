@@ -9,9 +9,13 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   private val movementSpeed = 0.05f
   private val playerSize = 0.3f
   private val attackSize = 1.2f
+  private val interactDistance = 1.6f
+  // When this is set to true, input will be ignored until the next tick
+  @volatile private var ignoreInput = false
   var input: (Float, Float) = (0f, 0f)
   var facingDirection: Direction = Direction.Down
   var health = 3
+  private var worldOpt: Option[World] = None
 
   // The player is attacking if attackingTimer != 0
   @volatile var attackingTimer: Int = 0
@@ -22,6 +26,8 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
   private val dyingLength = 120
 
   override def tick(world: World): Unit = {
+    worldOpt = Option(world)
+    if ignoreInput then ignoreInput = false
 
     // Return if there was a timer to handle
     if handelTimers(world) then return
@@ -122,7 +128,24 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
     }
   }
 
+  private def interact(world: World): Unit = {
+    for (sprite <- world.sprites) {
+      sprite match {
+        case npc: Npc =>
+          val dx = npc.xPos - xPos
+          val dy = npc.yPos - yPos
+          val distance = math.sqrt(dx*dx + dy*dy)
+          if distance < interactDistance then
+            ignoreInput = true
+            input = (0f, 0f)
+            npc.showDialog(world)
+        case _ =>
+      }
+    }
+  }
+
   override def keyPressed(keyEvent: KeyEvent): Unit = {
+    if ignoreInput then return
     val code = keyEvent.getKeyCode
     if !keysPressed.contains(code) then
       keysPressed += code
@@ -133,6 +156,7 @@ class Player(x: Float, y: Float) extends Sprite(x, y), KeyListener {
       case KeyEvent.VK_DOWN => startAttack(Direction.Down)
       case KeyEvent.VK_LEFT => startAttack(Direction.Left)
       case KeyEvent.VK_RIGHT => startAttack(Direction.Right)
+      case KeyEvent.VK_E => if worldOpt.isDefined then interact(worldOpt.get)
       case _ =>
     }
   }

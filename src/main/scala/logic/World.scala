@@ -2,7 +2,7 @@ package logic
 
 import scala.collection.mutable.ArrayBuffer
 
-class World {
+class World(val game: GameLogicInterface) {
   val stage: Stage = new Stage()
   val sprites: ArrayBuffer[Sprite] = ArrayBuffer[Sprite]()
   private val spritesToBeRemoved = ArrayBuffer[Sprite]()
@@ -15,8 +15,11 @@ class World {
         sprites.append(playerOption.get)
       case "Bat" =>
         sprites.append(new Bat(entity._2._1.toFloat, entity._2._2.toFloat))
+      case "NPC" =>
+        sprites.append(new Npc(entity._2._1.toFloat, entity._2._2.toFloat, Vector()))
   }
   val player: Player = playerOption.get
+  sprites.append(new Npc(7, 7, Vector("Hei", "Minä olen NPC")))
 
   def tick(): Unit = {
     for (sprite <- sprites) {
