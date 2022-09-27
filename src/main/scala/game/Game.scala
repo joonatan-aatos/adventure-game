@@ -33,6 +33,11 @@ class Game extends GameInterface, GameLogicInterface, KeyListener {
       val result = JOptionPane.showInputDialog("Mikä on sinun nimi?")
       if result != null then playerName = result
     world.player.name = playerName
+    // Show introduction text
+    JOptionPane.showMessageDialog(
+      visualizer.frame,
+      s"Hei $playerName,\nTämän pelin tavoitteena on selvittää mitä erään kylän päällikön pojalle on sattunut.\nPakollinen tervehdysteksti on nyt ohi."
+    )
     JOptionPane.showMessageDialog(
       visualizer.frame,
       "Pelaaja liikkuu näppäimillä W, A, S ja D.\nMuille pelin hahmoille voi puhua painamalla E-näppäintä.\nAputekstin saa auki H-näppäimellä"
