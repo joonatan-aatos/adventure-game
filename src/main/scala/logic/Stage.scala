@@ -55,12 +55,30 @@ class Stage {
   // Entities (Defines spawn points for entities)
   private val entitiesJSON = layerInstancesJSON(0)
   private val entityInstancesSeq = entitiesJSON("entityInstances").as[Seq[JsValue]]
-  val entities: Vector[(String, (Int, Int))] = {
-    val entitiesArray = ArrayBuffer[(String, (Int, Int))]()
+  val entities: Vector[(String, (Int, Int), Option[Any])] = {
+    val entitiesArray = ArrayBuffer[(String, (Int, Int), Option[Any])]()
     for (entityJSON <- entityInstancesSeq) {
       val entityType = entityJSON("__identifier").as[String]
       val positionSeq = entityJSON("__grid").as[Seq[Int]]
-      val entity: (String, (Int, Int)) = (entityType, (positionSeq.head, positionSeq(1)))
+      var additionalData: Option[Any] = None
+      // Find additional data
+      if entityType == "Npc" then {
+        // Read the npc's name and dialog
+        val fieldInstances = entityJSON("fieldInstances").as[Seq[JsValue]]
+        var name = ""
+        var dialog = Vector[String]()
+        for (field <- fieldInstances) {
+          val identifier = field("__identifier").as[String]
+          identifier match {
+            case "Name" =>
+              name = field("__value").as[String]
+            case "Dialog" =>
+              dialog = field("__value").as[Seq[String]].toVector
+          }
+        }
+        additionalData = Option((name, dialog))
+      }
+      val entity: (String, (Int, Int), Option[Any]) = (entityType, (positionSeq.head, positionSeq(1)), additionalData)
       entitiesArray += entity
     }
     entitiesArray.toVector

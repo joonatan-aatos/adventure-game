@@ -39,19 +39,19 @@ class Engine(val gameInterface: GameInterface) extends Runnable, EngineInterface
             unprocessedFrames += (now - before) / nsPerFrame
             before = now;
 
-            while unprocessedTicks >= 1 do {
+            if unprocessedTicks >= 1 then {
                 gameInterface.update()
                 tps += 1
-                unprocessedTicks -= 1
+                unprocessedTicks -= Math.floor(unprocessedTicks)
             }
 
-            if(desiredFPS == Engine.UNLIMITED || unprocessedFrames >= 1) {
+            if (desiredFPS == Engine.UNLIMITED || unprocessedFrames >= 1) {
                 gameInterface.render()
                 fps += 1
                 unprocessedFrames -= Math.floor(unprocessedFrames)
             }
 
-            if(System.currentTimeMillis() - fpsTimer >= 1000) {
+            if (System.currentTimeMillis() - fpsTimer >= 1000) {
                 currentFPS = fps;
                 currentTPS = tps;
 

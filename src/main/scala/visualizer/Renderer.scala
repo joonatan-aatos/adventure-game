@@ -4,7 +4,7 @@ import logic.{Bat, Direction, Npc, Player, Sprite, Stage, Tile, World}
 import visualizer.ResourceHelper.{batIdleMap, batRunningMap, npcIdleMap, playerAttackingMap, playerIdleMap, playerRunningMap, playerTakingDamageMap}
 
 import java.awt.image.{BufferedImage, ImageObserver}
-import java.awt.{BasicStroke, Color, Font, Graphics2D}
+import java.awt.{BasicStroke, Color, Font, Graphics2D, RenderingHints}
 import scala.annotation.unused
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -35,8 +35,9 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     val tilesBelowPlayer = ArrayBuffer[Tile]()
     val tilesAbovePlayer = ArrayBuffer[Tile]()
     for (tile <- filterVisibleTiles(world.stage.tilesLayer2)) {
-      if tile.src._2 < 11 then tilesAbovePlayer.append(tile)
-      else tilesBelowPlayer.append(tile)
+      // Special check for rendering tree stumps always below the player
+      if tile.src._2 == 11 && tile.src._1 >= 3 && tile.src._1 <= 6 then tilesBelowPlayer.append(tile)
+      else tilesAbovePlayer.append(tile)
     }
     // Draw all tiles below sprites
     drawTiles(g, tilesBelowPlayer.toVector)
@@ -156,8 +157,11 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
 
   def drawDialog(g: Graphics2D, dialog: String): Unit = {
     val dialogMargin = 100
-    val dialogHeight = 300
-    val textMargin = 30
+    val dialogHeight = 80
+    val textMarginTop = 10
+    val textMarginLeft = 20
+    // Improve text quality
+    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB)
     // Draw black box
     g.setColor(new Color(0, 0, 0, 150))
     g.fillRect(
@@ -176,9 +180,9 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     )
     // Draw text
     g.setColor(Color.WHITE)
-    g.setFont(new Font("TimesRoman", Font.PLAIN, 24))
+    g.setFont(new Font("TimesRoman", Font.PLAIN, 20))
     val fontHeight = g.getFontMetrics.getHeight
-    val maxLineWidth = camera.windowWidth - 2 * dialogMargin - 2 * textMargin
+    val maxLineWidth = camera.windowWidth - 2 * dialogMargin - 2 * textMarginLeft
     var line = ""
     var currentLine = 1
     // Automatically break lines when the line becomes bigger
@@ -186,13 +190,13 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     for (word <- words) {
       val newLineWidth = g.getFontMetrics.getStringBounds(s"$line $word", g).getWidth
       if newLineWidth > maxLineWidth then
-        g.drawString(line, dialogMargin + textMargin, dialogMargin + textMargin + currentLine * fontHeight)
+        g.drawString(line, dialogMargin + textMarginLeft, dialogMargin + textMarginTop + currentLine * fontHeight)
         line = word
         currentLine += 1
       else
         line = if line.isEmpty then word else s"$line $word"
     }
-    g.drawString(line, dialogMargin + textMargin, dialogMargin + textMargin + currentLine * fontHeight)
+    g.drawString(line, dialogMargin + textMarginLeft, dialogMargin + textMarginTop + currentLine * fontHeight)
   }
 
   @unused

@@ -1,6 +1,7 @@
 package logic
 
-class Npc(x: Float, y: Float, dialog: Vector[String]) extends Sprite(x, y) {
+class Npc(x: Float, y: Float, val name: String, val dialog: Vector[String]) extends Sprite(x, y) {
+  private val dialogWithName = dialog.map(s => s"$name: $s")
   var facingDirection: Direction = Direction.Down
   override def tick(world: World): Unit = {
     val player = world.player
@@ -13,6 +14,6 @@ class Npc(x: Float, y: Float, dialog: Vector[String]) extends Sprite(x, y) {
   }
 
   def showDialog(world: World): Unit = {
-    world.game.showDialog(dialog)
+    world.game.showDialog(dialogWithName)
   }
 }

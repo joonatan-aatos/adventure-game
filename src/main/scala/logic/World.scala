@@ -15,8 +15,9 @@ class World(val game: GameLogicInterface) {
         sprites.append(playerOption.get)
       case "Bat" =>
         sprites.append(new Bat(entity._2._1.toFloat, entity._2._2.toFloat))
-      case "NPC" =>
-        sprites.append(new Npc(entity._2._1.toFloat, entity._2._2.toFloat, Vector()))
+      case "Npc" =>
+        val additionalData = entity._3.get.asInstanceOf[(String, Vector[String])]
+        sprites.append(new Npc(entity._2._1.toFloat, entity._2._2.toFloat, additionalData._1, additionalData._2))
   }
   val player: Player = playerOption.get
 
