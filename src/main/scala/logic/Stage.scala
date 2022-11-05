@@ -17,15 +17,15 @@ class Tile(val pos: (Int, Int), val src: (Int, Int)) {
 }
 
 /**
- * The Stage class loads and parses the world file that is in JSON format.
- * It also acts as an interface for interacting with the stage.
+ * The Stage class loads and parses the world file that is in JSON format. It also acts as an
+ * interface for interacting with the stage.
  */
 class Stage {
 
   private def parseTile(tileJSON: JsValue): Tile = {
     val px = tileJSON("px").as[Seq[Int]]
     val src = tileJSON("src").as[Seq[Int]]
-    Tile((px.head/16, px(1)/16), (src.head/16, src(1)/16))
+    Tile((px.head / 16, px(1) / 16), (src.head / 16, src(1) / 16))
   }
 
   // Load world.ldtk
@@ -87,12 +87,14 @@ class Stage {
         }
         additionalData = Option((name, dialog))
       }
-      val entity: (String, (Int, Int), Option[Any]) = (entityType, (positionSeq.head, positionSeq(1)), additionalData)
+      val entity: (String, (Int, Int), Option[Any]) =
+        (entityType, (positionSeq.head, positionSeq(1)), additionalData)
       entitiesArray += entity
     }
     entitiesArray.toVector
   }
 
   // Size of a tile in the collision map is half a tile
-  def canBeInPosition(xPos: Float, yPos: Float): Boolean = collisionMap(math.floor(xPos*2).toInt)(math.floor(yPos*2).toInt)
+  def canBeInPosition(xPos: Float, yPos: Float): Boolean =
+    collisionMap(math.floor(xPos * 2).toInt)(math.floor(yPos * 2).toInt)
 }

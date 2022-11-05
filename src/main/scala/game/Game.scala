@@ -9,20 +9,15 @@ import javax.swing.JOptionPane
 import scala.collection.mutable
 
 /**
- * The Game class is responsible for orchestrating the whole game.
- * In a sense, it is a glue between the World and the Visualizer.
- * The Game class handles much of the program's higher level state.
+ * The Game class is responsible for orchestrating the whole game. In a sense, it is a glue between
+ * the World and the Visualizer. The Game class handles much of the program's higher level state.
  */
 class Game extends GameInterface, GameLogicInterface, KeyListener {
-  enum State {
-    case Default
-    case ShowingDialog
-  }
   val visualizer = new Visualizer()
+  val dialogQueue: mutable.Queue[String] = mutable.Queue[String]()
   var engineInterface: Option[EngineInterface] = None
   var world = new World(this)
   var state: State = State.Default
-  val dialogQueue: mutable.Queue[String] = mutable.Queue[String]()
   var currentDialog: Option[String] = None
 
   override def init(engine: EngineInterface): Unit = {
@@ -58,22 +53,27 @@ class Game extends GameInterface, GameLogicInterface, KeyListener {
         if world.winConditionMet then
           // TODO: Implement these prompts some other way
           if JOptionPane.showOptionDialog(
-            visualizer.frame,
-            "Haluatko vielä jatkaa pelaamista?",
-            "Voitit pelin",
-            JOptionPane.DEFAULT_OPTION,
-            JOptionPane.INFORMATION_MESSAGE,
-            null,
-            Array("Kyllä", "Ei"),
-            "Kyllä"
-          ) == 0 then
-            world.winConditionMet = false
+              visualizer.frame,
+              "Haluatko vielä jatkaa pelaamista?",
+              "Voitit pelin",
+              JOptionPane.DEFAULT_OPTION,
+              JOptionPane.INFORMATION_MESSAGE,
+              null,
+              Array("Kyllä", "Ei"),
+              "Kyllä"
+            ) == 0
+          then world.winConditionMet = false
           else
             engineInterface.get.stop()
-            visualizer.frame.dispatchEvent(new WindowEvent(visualizer.frame, WindowEvent.WINDOW_CLOSING));
+            visualizer.frame.dispatchEvent(
+              new WindowEvent(visualizer.frame, WindowEvent.WINDOW_CLOSING)
+            )
         if world.player.shouldBeDeleted then
           JOptionPane.showMessageDialog(visualizer.frame, "Hups, taisit kuolla...")
-          JOptionPane.showMessageDialog(visualizer.frame, "Ei haittaa! Tässä pelissä saat loputtomasti uusia yrityksiä :)")
+          JOptionPane.showMessageDialog(
+            visualizer.frame,
+            "Ei haittaa! Tässä pelissä saat loputtomasti uusia yrityksiä :)"
+          )
           visualizer.removeEventListener(world.player)
           world = new World(this)
           visualizer.addEventListener(world.player)
@@ -94,8 +94,7 @@ class Game extends GameInterface, GameLogicInterface, KeyListener {
     code match {
       case KeyEvent.VK_E =>
         if state == State.ShowingDialog then
-          if dialogQueue.nonEmpty then
-            currentDialog = Option(dialogQueue.dequeue())
+          if dialogQueue.nonEmpty then currentDialog = Option(dialogQueue.dequeue())
           else
             currentDialog = None
             state = State.Default
@@ -116,5 +115,10 @@ H-näppäimellä voi avata tämän tekstin.
   override def keyReleased(keyEvent: KeyEvent): Unit = {}
 
   override def keyTyped(keyEvent: KeyEvent): Unit = {}
+
+  enum State {
+    case Default
+    case ShowingDialog
+  }
 
 }

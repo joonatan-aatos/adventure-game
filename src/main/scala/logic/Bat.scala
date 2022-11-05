@@ -1,11 +1,12 @@
 package logic
 
 /**
- * The Bat class represents a generic Bat enemy.
- * It contains all logic regarding the behaviour of the Bat
- * @param x Initial x position
- * @param y Initial y position
- * TODO: Implement common Enemy superclass
+ * The Bat class represents a generic Bat enemy. It contains all logic regarding the behaviour of
+ * the Bat
+ * @param x
+ *   Initial x position
+ * @param y
+ *   Initial y position TODO: Implement common Enemy superclass
  */
 class Bat(x: Float, y: Float) extends Sprite(x, y) {
   private val targetDistanceThreshold = 5f
@@ -22,11 +23,10 @@ class Bat(x: Float, y: Float) extends Sprite(x, y) {
     val player = world.player
     val dx = player.xPos - xPos
     val dy = player.yPos - yPos
-    val distance = math.sqrt(dx*dx + dy*dy).toFloat
+    val distance = math.sqrt(dx * dx + dy * dy).toFloat
 
     if target.isEmpty then
-      if distance < targetDistanceThreshold then
-        target = Option(player)
+      if distance < targetDistanceThreshold then target = Option(player)
       return;
 
     if distance > targetDistanceThreshold then

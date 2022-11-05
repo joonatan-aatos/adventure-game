@@ -1,38 +1,44 @@
 package visualizer
 
-import logic.{Bat, Direction, Npc, Player, Sprite, Stage, Tile, World}
-import visualizer.ResourceHelper.{batIdleMap, batRunningMap, npcIdleMap, playerAttackingMap, playerIdleMap, playerRunningMap, playerTakingDamageMap}
+import logic.*
+import visualizer.ResourceHelper.*
 
 import java.awt.image.{BufferedImage, ImageObserver}
-import java.awt.{BasicStroke, Color, Font, Graphics2D, RenderingHints}
+import java.awt.*
 import scala.annotation.unused
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 /**
  * The renderer class handles all of the details when rendering a World
- * @param imageObserver ImageObserver is given to most drawImage calls as a parameter
- * @param camera The camera determines what part of the world is rendered
- * @param tileSize The size of a single tile in pixels
+ * @param imageObserver
+ *   ImageObserver is given to most drawImage calls as a parameter
+ * @param camera
+ *   The camera determines what part of the world is rendered
+ * @param tileSize
+ *   The size of a single tile in pixels
  */
 class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) {
   private val scalingFactor = tileSize.toFloat / 16f
 
   private var playerAnimation: Animation = ResourceHelper.PLAYER_IDLE_DOWN
-  private val spriteAnimations: mutable.HashMap[Sprite, Animation] = mutable.HashMap[Sprite, Animation]()
+  private val spriteAnimations: mutable.HashMap[Sprite, Animation] =
+    mutable.HashMap[Sprite, Animation]()
 
   def calculateDisplayCoords(worldXPos: Float, worldYPos: Float): (Float, Float) =
     (worldXPos * tileSize - camera.xPos, worldYPos * tileSize - camera.yPos)
 
   /**
-   * @param tiles Tiles to be filtered
-   * @return All tiles that are visible defined by this.camera
+   * @param tiles
+   *   Tiles to be filtered
+   * @return
+   *   All tiles that are visible defined by this.camera
    */
   def filterVisibleTiles(tiles: Vector[Tile]): Vector[Tile] = tiles.filter(tile =>
     tile.pos._1 + 1 > camera.xPos / tileSize &&
-    tile.pos._1 < (camera.xPos + camera.windowWidth) / tileSize &&
-    tile.pos._2 + 1 > camera.yPos / tileSize &&
-    tile.pos._2 < (camera.yPos + camera.windowHeight) / tileSize
+      tile.pos._1 < (camera.xPos + camera.windowWidth) / tileSize &&
+      tile.pos._2 + 1 > camera.yPos / tileSize &&
+      tile.pos._2 < (camera.yPos + camera.windowHeight) / tileSize
   )
 
   def draw(g: Graphics2D, world: World): Unit = {
@@ -46,7 +52,8 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     val tilesAbovePlayer = ArrayBuffer[Tile]()
     for (tile <- filterVisibleTiles(world.stage.tilesLayer2)) {
       // Special check for rendering tree stumps always below the player
-      if tile.src._2 == 11 && tile.src._1 >= 3 && tile.src._1 <= 6 then tilesBelowPlayer.append(tile)
+      if tile.src._2 == 11 && tile.src._1 >= 3 && tile.src._1 <= 6 then
+        tilesBelowPlayer.append(tile)
       else tilesAbovePlayer.append(tile)
     }
     // Draw all tiles below sprites
@@ -113,7 +120,7 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
             spriteAnimations += (npc -> animation)
           image = Option(previousAnimation.getFrame)
         case player: Player => drawPlayer(g, player)
-        case _ =>
+        case _              =>
 
       if image.isDefined then
         val coords = calculateDisplayCoords(sprite.xPos, sprite.yPos)
@@ -148,12 +155,23 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     val heartPadding = 2
     val barPadding = 12
     g.setColor(new Color(0, 0, 0, 150))
-    g.fillRect(barPadding, barPadding, (heartSize + heartPadding) * 3 + heartPadding, heartSize + heartPadding * 2)
+    g.fillRect(
+      barPadding,
+      barPadding,
+      (heartSize + heartPadding) * 3 + heartPadding,
+      heartSize + heartPadding * 2
+    )
     g.setColor(new Color(0, 0, 0))
     g.setStroke(new BasicStroke(4))
-    g.drawRect(barPadding, barPadding, (heartSize + heartPadding) * 3 + heartPadding, heartSize + heartPadding * 2)
+    g.drawRect(
+      barPadding,
+      barPadding,
+      (heartSize + heartPadding) * 3 + heartPadding,
+      heartSize + heartPadding * 2
+    )
     for (i <- 0 until 3) {
-      val image = if i < player.health then ResourceHelper.FULL_HEART else ResourceHelper.DEPLETED_HEART
+      val image =
+        if i < player.health then ResourceHelper.FULL_HEART else ResourceHelper.DEPLETED_HEART
       g.drawImage(
         image,
         barPadding + heartPadding + i * (heartSize + heartPadding),
@@ -171,7 +189,10 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     val textMarginTop = 10
     val textMarginLeft = 20
     // Improve text quality
-    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB)
+    g.setRenderingHint(
+      RenderingHints.KEY_TEXT_ANTIALIASING,
+      RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB
+    )
     // Draw black box
     g.setColor(new Color(0, 0, 0, 150))
     g.fillRect(
@@ -200,13 +221,20 @@ class Renderer(val imageObserver: ImageObserver, camera: Camera, tileSize: Int) 
     for (word <- words) {
       val newLineWidth = g.getFontMetrics.getStringBounds(s"$line $word", g).getWidth
       if newLineWidth > maxLineWidth then
-        g.drawString(line, dialogMargin + textMarginLeft, dialogMargin + textMarginTop + currentLine * fontHeight)
+        g.drawString(
+          line,
+          dialogMargin + textMarginLeft,
+          dialogMargin + textMarginTop + currentLine * fontHeight
+        )
         line = word
         currentLine += 1
-      else
-        line = if line.isEmpty then word else s"$line $word"
+      else line = if line.isEmpty then word else s"$line $word"
     }
-    g.drawString(line, dialogMargin + textMarginLeft, dialogMargin + textMarginTop + currentLine * fontHeight)
+    g.drawString(
+      line,
+      dialogMargin + textMarginLeft,
+      dialogMargin + textMarginTop + currentLine * fontHeight
+    )
   }
 
   @unused

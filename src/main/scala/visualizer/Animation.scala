@@ -3,11 +3,13 @@ package visualizer
 import java.awt.image.BufferedImage
 
 /**
- * The Animation class represents a single animation.
- * If multiple sprites are using the same animation, a copy of the animation should
- * be made for each sprite using the constructor Animation(animation: Animation)
- * @param frames The frames the animation consists of
- * @param delay How long each frame is shown (measured in game ticks)
+ * The Animation class represents a single animation. If multiple sprites are using the same
+ * animation, a copy of the animation should be made for each sprite using the constructor
+ * Animation(animation: Animation)
+ * @param frames
+ *   The frames the animation consists of
+ * @param delay
+ *   How long each frame is shown (measured in game ticks)
  */
 class Animation(val frames: Vector[BufferedImage], val delay: Int) {
   private var frameIndex = 0

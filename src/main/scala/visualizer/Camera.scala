@@ -1,34 +1,51 @@
 package visualizer
 
 /**
- * The Camera class keeps track of the players position and updates the location of itself accordingly
- * @param xPos Initial x position
- * @param yPos Initial y position
- * @param windowWidth Width of the window that the game is rendered on
- * @param windowHeight Height of thw window that the game is rendered on
- * @param tileSize Size of a single tile in pixels
+ * The Camera class keeps track of the players position and updates the location of itself
+ * accordingly
+ * @param xPos
+ *   Initial x position
+ * @param yPos
+ *   Initial y position
+ * @param windowWidth
+ *   Width of the window that the game is rendered on
+ * @param windowHeight
+ *   Height of thw window that the game is rendered on
+ * @param tileSize
+ *   Size of a single tile in pixels
  */
-class Camera(var xPos: Float, var yPos: Float, val windowWidth: Float, val windowHeight: Float, tileSize: Float) {
+class Camera(
+    var xPos: Float,
+    var yPos: Float,
+    val windowWidth: Float,
+    val windowHeight: Float,
+    tileSize: Float
+) {
   private val cameraVelocity = 0.06f
   private val moveThreshold = tileSize * 0.5f
 
-  def updatePosition(targetXPos: Float, targetYPos: Float, stageWidth: Int, stageHeight: Int): Unit = {
+  def updatePosition(
+      targetXPos: Float,
+      targetYPos: Float,
+      stageWidth: Int,
+      stageHeight: Int
+  ): Unit = {
     val targetCameraPosition = (
       targetXPos * tileSize - windowWidth / 2f,
       targetYPos * tileSize - windowHeight / 2f
     )
 
     // X-Position
-    if xPos - moveThreshold < targetCameraPosition._1 && targetCameraPosition._1 > xPos + moveThreshold then
-      xPos += cameraVelocity * (targetCameraPosition._1 - xPos - moveThreshold)
-    else if xPos - moveThreshold > targetCameraPosition._1 && targetCameraPosition._1 < xPos + moveThreshold then
-      xPos += cameraVelocity * (targetCameraPosition._1 - xPos + moveThreshold)
+    if xPos - moveThreshold < targetCameraPosition._1 && targetCameraPosition._1 > xPos + moveThreshold
+    then xPos += cameraVelocity * (targetCameraPosition._1 - xPos - moveThreshold)
+    else if xPos - moveThreshold > targetCameraPosition._1 && targetCameraPosition._1 < xPos + moveThreshold
+    then xPos += cameraVelocity * (targetCameraPosition._1 - xPos + moveThreshold)
 
     // Y-Position
-    if yPos - moveThreshold < targetCameraPosition._2 && targetCameraPosition._2 > yPos + moveThreshold then
-      yPos += cameraVelocity * (targetCameraPosition._2 - yPos - moveThreshold)
-    else if yPos - moveThreshold > targetCameraPosition._2 && targetCameraPosition._2 < yPos + moveThreshold then
-      yPos += cameraVelocity * (targetCameraPosition._2 - yPos + moveThreshold)
+    if yPos - moveThreshold < targetCameraPosition._2 && targetCameraPosition._2 > yPos + moveThreshold
+    then yPos += cameraVelocity * (targetCameraPosition._2 - yPos - moveThreshold)
+    else if yPos - moveThreshold > targetCameraPosition._2 && targetCameraPosition._2 < yPos + moveThreshold
+    then yPos += cameraVelocity * (targetCameraPosition._2 - yPos + moveThreshold)
 
     // Make sure the camera doesn't go out of bounds
     val maxXPos = stageWidth * tileSize - windowWidth
